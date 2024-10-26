@@ -1,10 +1,11 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 
 export default function Chat() {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
+  const messagesEndRef = useRef(null);
 
   const handleSendMessage = async () => {
     if (!input.trim()) return;
@@ -40,44 +41,45 @@ export default function Chat() {
     }
   };
 
+  // Scroll to the latest message when messages are updated
+  useEffect(() => {
+    if (messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [messages]);
+
   return (
-    <div className="w-full p-4">
-      <div className="overflow-y-auto h-[85vh] p-4 mb-4">
+    <div className="w-[80%] mx-auto p-4">
+      <div className="overflow-y-auto h-[85vh] p-4 mb-4 space-y-4">
         {messages.map((msg, index) => (
           <div
             key={index}
-            style={{
-              backgroundColor: msg.role === "user" ? "#DCF8C6" : "#E8E8E8",
-              alignSelf: msg.role === "user" ? "flex-end" : "flex-start",
-              padding: "10px",
-              borderRadius: "10px",
-              marginBottom: "10px",
-              maxWidth: "80%",
-            }}
+            className={`${
+              msg.role === "user"
+                ? "bg-green-200 self-end ml-auto"
+                : "bg-gray-200 self-start"
+            } p-3 rounded-lg max-w-max break-words`}
           >
             {msg.content}
           </div>
         ))}
+        {/* Dummy div to keep scroll at the bottom */}
+        <div ref={messagesEndRef} />
       </div>
 
-      <div style={{ display: "flex", alignItems: "center" }}>
+      <div className="flex items-center">
         <input
           type="text"
           value={input}
           onChange={(e) => setInput(e.target.value)}
           placeholder="Type your message..."
-          style={{
-            flex: 1,
-            padding: "10px",
-            borderRadius: "5px",
-            border: "1px solid #ddd",
-          }}
+          className="flex-1 p-2 rounded-md border border-gray-300"
           onKeyDown={(e) => e.key === "Enter" && handleSendMessage()}
         />
         <button
           onClick={handleSendMessage}
           disabled={loading}
-          style={{ marginLeft: "10px" }}
+          className="ml-2 px-4 py-2 rounded-md bg-blue-500 text-white hover:bg-blue-600 disabled:opacity-50"
         >
           {loading ? "..." : "Send"}
         </button>
