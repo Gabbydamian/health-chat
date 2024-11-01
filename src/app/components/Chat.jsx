@@ -1,5 +1,7 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 
 export default function Chat() {
   const [messages, setMessages] = useState([]);
@@ -50,7 +52,7 @@ export default function Chat() {
 
   return (
     <div className="w-[80%] mx-auto p-4">
-      <div className="overflow-y-auto h-[85vh] p-4 mb-4 space-y-4">
+      <div className="overflow-y-auto h-[68vh] p-4 mb-4 space-y-4">
         {messages.map((msg, index) => (
           <div
             key={index}
@@ -68,22 +70,22 @@ export default function Chat() {
       </div>
 
       <div className="flex items-center">
-        <input
+        <Input
           type="text"
           value={input}
           onChange={(e) => setInput(e.target.value)}
           placeholder="Type your message..."
-          className="flex-1 p-2 rounded-md border border-gray-300"
+          // className="flex-1 p-2 rounded-md border border-gray-300"
           onKeyDown={(e) => e.key === "Enter" && handleSendMessage()}
+          autoFocus
         />
-        <button
-          onClick={handleSendMessage}
-          disabled={loading}
-          className="ml-2 px-4 py-2 rounded-md bg-blue-500 text-white hover:bg-blue-600 disabled:opacity-50"
-        >
+        <Button onClick={handleSendMessage} disabled={loading} className="ml-4">
           {loading ? "..." : "Send"}
-        </button>
+        </Button>
       </div>
+      <p className="text-center italic mt-4 text-sm">
+        This chatbot can make mistakes. Confirm important information.
+      </p>
     </div>
   );
 }

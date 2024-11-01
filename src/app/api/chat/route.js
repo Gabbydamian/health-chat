@@ -7,7 +7,7 @@ export async function POST(req) {
 
   try {
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 10000); 
+    // const timeoutId = setTimeout(() => controller.abort(), 10000); 
 
     let out = "";
     const stream = client.chatCompletionStream({
@@ -21,11 +21,11 @@ export async function POST(req) {
       if (chunk.choices && chunk.choices.length > 0) {
         const newContent = chunk.choices[0].delta.content;
         out += newContent;
-        console.log(newContent);
+        // console.log(newContent);
       }
     }
 
-    clearTimeout(timeoutId);
+    // clearTimeout(timeoutId);
     return new Response(JSON.stringify({ response: out }), {
       status: 200,
       headers: { "Content-Type": "application/json" },
